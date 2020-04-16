@@ -5,6 +5,7 @@ from matplotlib import pyplot as plt
 def decimal_to_ternary(rule_in_decimal):
     """
     Function to convert a given decimal number to a ternary
+    
 
     Parameters
     ----------
