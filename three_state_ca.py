@@ -2,31 +2,31 @@ import random
 from matplotlib import pyplot as plt
 
 
-def decimal_to_ternary(n):
-    '''
+def decimal_to_ternary(rule_in_decimal):
+    """
     Function to convert a given decimal number to a ternary
 
     Parameters
     ----------
-    n: int
+    rule_in_decimal: int
         Posivite integer that specifies the decimal number.
 
     Returns
     -------
-    ans: int
+    rule_in_ternary: int
         The ternary representation of the input number.
-    '''
-    ans = ""
-    while n > 0:
-        dig = int(n % 3)
-        ans += str(dig)
-        n //= 3
-    ans = ans[::-1]
-    return ans
+    """
+    rule_in_ternary = ""
+    while rule_in_decimal > 0:
+        remainder = int(rule_in_decimal % 3)
+        rule_in_ternary += str(remainder)
+        rule_in_decimal //= 3
+    rule_in_ternary = rule_in_ternary[::-1]
+    return rule_in_ternary
 
 
 def random_string(length):
-    '''
+    """
     Returns a random bit string of the given length.
 
     Parameters
@@ -38,14 +38,14 @@ def random_string(length):
     -------
     out: list
         The random bit string given as a list, with int elements.
-    '''
+    """
     if not isinstance(length, int) or length < 0:
         raise ValueError("input length must be a positive ingeter")
     return [random.randint(0, 2) for _ in range(length)]
 
 
 def lookup_table(rule):
-    '''
+    """
     Returns a dictionary which maps ECA neighborhoods to output values.
     Uses Wolfram rule number convention.
 
@@ -61,24 +61,29 @@ def lookup_table(rule):
         Lookup table dictionary that maps neighborhood tuples to their output
         according to the ECA local evolution rule (i.e. the lookup table),
         as specified by the rule number.
-    '''
-    if (not isinstance(rule, int) or rule < 0 or
-            rule > 19682):
-        raise ValueError(
-            "rule must be an int between 0 and 19682, inclusive"
-            )
-    neighborhoods = [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1),
-                     (1, 2), (2, 0), (2, 1), (2, 2)]
-    in_ternary = '{:{fill}{align}{width}}'.format(decimal_to_ternary(rule),
-                                                  fill='0',
-                                                  align='>',
-                                                  width='9')
+    """
+    if not isinstance(rule, int) or rule < 0 or rule > 19682:
+        raise ValueError("rule must be an int between 0 and 19682, inclusive")
+    neighborhoods = [
+        (0, 0),
+        (0, 1),
+        (0, 2),
+        (1, 0),
+        (1, 1),
+        (1, 2),
+        (2, 0),
+        (2, 1),
+        (2, 2),
+    ]
+    in_ternary = "{:{fill}{align}{width}}".format(
+        decimal_to_ternary(rule), fill="0", align=">", width="9"
+    )
 
     return dict(zip(neighborhoods, map(int, reversed(in_ternary))))
 
 
 def spacetime_field(rule_number, initial_condition, time_steps):
-    '''
+    """
     Returns a spacetime field array using the given rule number on the
     given initial condition for the given number of time steps.
 
@@ -93,7 +98,7 @@ def spacetime_field(rule_number, initial_condition, time_steps):
     time_steps: int
         Positive integer specifying the number of time steps for
         evolving the ECA.
-    '''
+    """
     if time_steps < 0:
         raise ValueError("time_steps must be a non-negative integer")
     # try converting time_steps to int
@@ -118,8 +123,7 @@ def spacetime_field(rule_number, initial_condition, time_steps):
         new_configuration = []
         for i in range(length):
 
-            neighborhood = (current_configuration[(i-1)],
-                            current_configuration[i])
+            neighborhood = (current_configuration[(i - 1)], current_configuration[i])
 
             new_configuration.append(lookup[neighborhood])
 
@@ -130,7 +134,7 @@ def spacetime_field(rule_number, initial_condition, time_steps):
 
 
 def spacetime_diagram(spacetime_field, size=12, colors=plt.cm.Greys):
-    '''
+    """
     Produces a simple spacetime diagram image using matplotlib imshow with
     'nearest' interpolation.
 
@@ -146,7 +150,7 @@ def spacetime_diagram(spacetime_field, size=12, colors=plt.cm.Greys):
     colors: matplotlib colormap, optional (default=plt.cm.Greys)
         See https://matplotlib.org/tutorials/colors/colormaps.html for
         choices. A colormap 'cmap' is called as: colors=plt.cm.cmap
-    '''
+    """
     plt.figure(figsize=(size, size))
-    plt.imshow(spacetime_field, cmap=colors, interpolation='nearest')
+    plt.imshow(spacetime_field, cmap=colors, interpolation="nearest")
     plt.show()
