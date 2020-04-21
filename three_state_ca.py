@@ -5,7 +5,6 @@ from matplotlib import pyplot as plt
 def decimal_to_ternary(rule_in_decimal):
     """
     Function to convert a given decimal number to a ternary
-    
 
     Parameters
     ----------
@@ -110,7 +109,7 @@ def spacetime_field(rule_number, initial_condition, time_steps):
 
     for i in initial_condition:
         if i not in [0, 1, 2]:
-            raise ValueError("initial condition must be a list of 0s and 1s")
+            raise ValueError("initial condition must be a list of 0s 1s and 2s")
 
     lookup = lookup_table(rule_number)
     length = len(initial_condition)
